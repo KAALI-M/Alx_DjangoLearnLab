@@ -1,3 +1,3 @@
- x = Book.objects.all()[0]
- x.title="Nineteen Eighty-Four"
- x.save()
+ book = Book.objects.all()[0]
+ book.title="Nineteen Eighty-Four"
+ book.save()
