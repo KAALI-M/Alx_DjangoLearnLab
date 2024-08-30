@@ -1,7 +1,7 @@
 from models import Author, Book, Library, Librarian
 
 #creation of authors
-author1 = Author.objects.create(name="M. Le Daillou")
+author = Author.objects.create(name="M. Le Daillou")
 author2 = Author.objects.create(name="H.j Bernard")
 
 #cration of books
@@ -10,7 +10,7 @@ book2 = Book.objects.create(title="time management", author=author2)
 book3 = Book.objects.create(title="Harry potter and the sneak", author=author1)
 
 # creation of liuibrary
-library1 = Library.objects.create(name="HD Library")
+library_name = Library.objects.create(name="HD Library")
 
 #add books 
 library1.books.add(book1,book2,book3)
@@ -28,14 +28,14 @@ for bk in all_books:
     print(f"{bk.title} by {bk.author.name} ")
 
 #books by author
-books = Book.objects.filter(author=author1)
+books = Book.objects.filter(author=author)
 print(f"books by {author1.name}")
 for bk in books:
     print(f"{bk.title} by {bk.author.name} ")
 
 # get spec libarary and it's book 
-Library.objects.get(name=library_name)
-library = Library.objects.prefetch_related(Book).get(name=library1)
+library2 = Library.objects.get(name=library_name)
+library = Library.objects.prefetch_related(Book).get(name=library_name)
 for bk in library.books.all() :
     print(f"{bk.title} by {bk.author.name}")
 
