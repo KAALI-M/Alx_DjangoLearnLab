@@ -21,6 +21,7 @@ librarian1.library.add(library1)
 
 
 # Retrieve data
+
 all_books = Book.objects.prefetch_related(Author).all()
 print(f"books :")
 for bk in all_books:
@@ -33,6 +34,7 @@ for bk in books:
     print(f"{bk.title} by {bk.author.name} ")
 
 # get spec libarary and it's book 
+Library.objects.get(name=library_name)
 library = Library.objects.prefetch_related(Book).get(name=library1)
 for bk in library.books.all() :
     print(f"{bk.title} by {bk.author.name}")
