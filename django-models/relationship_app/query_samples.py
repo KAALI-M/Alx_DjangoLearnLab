@@ -21,6 +21,8 @@ librarian1.library.add(library1)
 
 
 # Retrieve data
+author_name="M. Le Daillou"
+author11 = Author.objects.get(name=author_name)
 
 all_books = Book.objects.prefetch_related(Author).all()
 print(f"books :")
