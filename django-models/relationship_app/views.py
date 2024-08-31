@@ -5,12 +5,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from .models import Book
-from .models import Library
+from .models import Library, Librarian
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
 
 from django.views.generic.detail import DetailView
-
 
 
 
@@ -21,7 +21,13 @@ def list_books(request):
     }
     return render(request, "relationship_app/list_books.html", context)
 
-
+class Libraries_List(ListView):
+    template_name = 'relationship_app/list_libraries.html'
+    model= Library
+    context_object_name = "libraries"
+    def get_queryset(self): 
+        return Library.objects.select_related("librarian").all()
+  
 
 class library_detail(DetailView):
     model= Library
