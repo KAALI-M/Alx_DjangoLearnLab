@@ -8,7 +8,8 @@ from .models import Book
 from .models import Library
 from django.views import View
 from django.views.generic.base import TemplateView
-from django.views.generic import DetailView, ListView
+
+from django.views.generic.detail import DetailView
 
 
 
