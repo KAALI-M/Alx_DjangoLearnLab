@@ -4,7 +4,8 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
-from .models import Book, Library
+from .models import Book
+from .models import Library
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, ListView
