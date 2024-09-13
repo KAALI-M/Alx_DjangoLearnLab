@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern E-Commerce</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-3xl font-bold text-orange-600">ShopMaster</a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-orange-600">Home</a>
+                <a href="#" class="text-gray-700 hover:text-orange-600">Products</a>
+                <a href="#" class="text-gray-700 hover:text-orange-600">Categories</a>
+                <a href="#" class="text-gray-700 hover:text-orange-600">Deals</a>
+                <a href="#" class="text-gray-700 hover:text-orange-600">Contact</a>
+            </div>
+
+            <!-- Profile & Cart -->
+            <div class="flex items-center space-x-6">
+                <!-- Cart -->
+                <div class="relative">
+                    <button id="cartBtn" class="text-gray-700 relative">
+                        <!-- Cart Icon from Font Awesome -->
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                        <!-- Cart Badge -->
+                        <span class="absolute top-0 right-0 inline-block w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center">3</span>
+                    </button>
+
+                    <!-- Cart Dropdown -->
+                    <div id="cartDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg">Cart</h3>
+                            <p class="text-gray-600">Commands: 3</p>
+                            <p class="text-gray-600">Total: $150</p>
+                            <a href="#" class="block mt-4 text-center bg-orange-500 text-white font-bold py-2 rounded hover:bg-orange-600">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile -->
+                <div class="relative">
+                    <button id="profileBtn" class="flex items-center space-x-2">
+                        <!-- User Icon from Font Awesome -->
+                        <i class="fas fa-user-circle fa-2x text-gray-700"></i>
+                        <span class="text-gray-700">Profile</span>
+                    </button>
+
+                    <!-- Profile Dropdown -->
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg">User Profile</h3>
+                            <p class="text-gray-600">Name: John Doe</p>
+                            <p class="text-gray-600">Email: johndoe@example.com</p>
+                            <div class="mt-4">
+                                <a href="#" class="block text-gray-700 hover:text-orange-600">Settings</a>
+                                <a href="#" class="block text-gray-700 hover:text-orange-600">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content (for demonstration) -->
+    <div class="container mx-auto mt-10">
+        <h1 class="text-4xl font-bold text-gray-800">Welcome to ShopMaster!</h1>
+        <p class="mt-4 text-gray-600">Find the best deals on all your favorite products.</p>
+    </div>
+
+    <!-- Footer (Optional) -->
+    <footer class="bg-white mt-10 p-4 shadow-md">
+        <div class="container mx-auto text-center text-gray-600">
+            © 2024 ShopMaster. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Cart Dropdown
+        const cartBtn = document.getElementById('cartBtn');
+        const cartDropdown = document.getElementById('cartDropdown');
+        cartBtn.addEventListener('click', () => {
+            cartDropdown.classList.toggle('hidden');
+        });
+
+        // Toggle Profile Dropdown
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        profileBtn.addEventListener('click', () => {
+            profileDropdown.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>
