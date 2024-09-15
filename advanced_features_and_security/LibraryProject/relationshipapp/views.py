@@ -1,7 +1,8 @@
 from typing import Any
 from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect 
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import authenticate, views, login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required, user_passes_test

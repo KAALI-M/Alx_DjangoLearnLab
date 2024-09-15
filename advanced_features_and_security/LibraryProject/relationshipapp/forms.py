@@ -1,6 +1,10 @@
 from typing import Any
 from django import forms
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission
+#from MyUser.models import User
+from django.contrib.auth import get_user_model
+
+
 
 class RegisterUserForm(forms.ModelForm):
     password = forms.CharField(
@@ -10,7 +14,7 @@ class RegisterUserForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={ 'placeholder': 'confirm password'})
     )
     class Meta:
-        model = User
+        model = get_user_model()
         exclude = ['password']
     def clean(self):
         cleaned_data = super().clean()

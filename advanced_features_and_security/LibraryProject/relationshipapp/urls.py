@@ -1,9 +1,9 @@
-from django.contrib import admin
+#from django.contrib import admin
 from django.urls import path
 from relationshipapp.views import list_books, library_detail, Libraries_List, login_user,LoginClass, RegisterUser, logout_user, admin_view, librarian_view, member_view
 
 urlpatterns = [
-    path("admin/",  admin_view, name="admin_view"),
+    #path("admin/",  admin_view, name="admin_view"),
     path("librarian/",  librarian_view , name="librarian_view"),
     path("member/",  member_view , name="member_view"),
 

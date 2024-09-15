@@ -1,8 +1,62 @@
 from django.db import models
-from django.contrib.auth.models import Permission, User
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth.models import Permission, AbstractUser, BaseUserManager
+#from MyUser.models import User
+from django.conf import settings
 
-# Create your models here.
+
+
+## Create your models here.
+#class CustomUserManager(BaseUserManager):
+#    def create_user(self, username, email, date_of_birth, password=None, **extra_fields):
+#        if not email:
+#            raise ValueError('Users must have an email address')
+#        if not date_of_birth:
+#            raise ValueError('Users must have a date of birth')
+#
+#        email = self.normalize_email(email)
+#        user = self.model(username=username, email=email, date_of_birth=date_of_birth, **extra_fields)
+#        user.set_password(password)
+#        user.save(using=self._db)
+#        return user
+#
+#    def create_superuser(self, username, email, date_of_birth, password, **extra_fields):
+#        extra_fields.setdefault('is_staff', True)
+#        extra_fields.setdefault('is_superuser', True)
+#        extra_fields.setdefault('is_active', True)
+#
+#        if extra_fields.get('is_staff') is not True:
+#            raise ValueError('Superuser must have is_staff=True.')
+#        if extra_fields.get('is_superuser') is not True:
+#            raise ValueError('Superuser must have is_superuser=True.')
+#
+#        return self.create_user(username, email, date_of_birth, password, **extra_fields)
+#
+#class CustomUser(AbstractUser):
+#    date_of_birth = models.DateField(null=True, blank=True)
+#    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+#    
+#    objects = CustomUserManager()
+#
+#    def __str__(self):
+#        return self.username
+#
+#    def create_superuser(self, username, email, date_of_birth, password, **extra_fields):
+#        """
+#        Create and save a superuser with the given username, email, date of birth, and password.
+#        """
+#        # Ensure superuser has correct permissions
+#        extra_fields.setdefault('is_staff', True)
+#        extra_fields.setdefault('is_superuser', True)
+#        extra_fields.setdefault('is_active', True)
+#
+#        if extra_fields.get('is_staff') is not True:
+#            raise ValueError('Superuser must have is_staff=True.')
+#        if extra_fields.get('is_superuser') is not True:
+#            raise ValueError('Superuser must have is_superuser=True.')
+#
+#        # Call create_user with the extra fields
+#        return self.create_user(username, email, date_of_birth, password, **extra_fields)
+
 class Author(models.Model):
     name=models.CharField(max_length=150)
 
@@ -36,15 +90,14 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
     
-class UserProfile(models.Model):
-    role_choices = {
-        'Admin':'admin',
-        'Librarian':'librarian',
-        'Member':'Member'
-        }
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    role = models.CharField(max_length=10,choices=role_choices)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.role}"
-    
+#class UserProfile(models.Model):
+#    role_choices = [
+#        ('admin', 'Admin'),
+#        ('librarian', 'Librarian'),
+#        ('member', 'Member')
+#    ]
+#    user = models.OneToOneField(User, on_delete=models.CASCADE)
+#    role = models.CharField(max_length=10, choices=role_choices)
+#
+#    def __str__(self):
+#        return f"{self.user.username} - {self.role}"
