@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,8 +60,16 @@
                     <!-- Profile -->
                     <div class="relative text-sm">
                         <button id="profileBtn" class="flex items-center space-x-2">
-                            <!-- User Icon from Font Awesome -->
-                            <i class="fas fa-user-circle fa-2x text-gray-700"></i>
+                            <!-- Profile Photo or Default Icon -->
+                            <div class="w-10 h-10 rounded-full overflow-hidden">
+                                {% if user.profile_photo %}
+                                    <!-- User's uploaded profile photo -->
+                                    <img src="{{ user.profile_photo.url }}" alt="Profile Photo" class="w-full h-full object-cover">
+                                {% else %}
+                                    <!-- Default profile image -->
+                                    <img src="{% static 'images/default-profile-photo.png' %}" alt="Default Profile Photo" class="w-full h-full object-cover">
+                                {% endif %}
+                            </div>
                             <span class="text-gray-700">Profile</span>
                         </button>
 
@@ -70,6 +79,7 @@
                                 <h3 class="font-bold text-2xl">User Profile</h3>
                                 <p class="text-gray-600 ">Name: {{user.username}}</p>
                                 <p class="text-gray-600 text-sm">Email: {{user.email}}</p>
+                                <p class="text-gray-600 text-sm">Role: {{profile}}</p>
                                 <div class="mt-4">
                                     <a href="#" class="block text-gray-700 hover:text-orange-600">Settings</a>
                                     <a href="{% url "logout" %}" class="block text-gray-700 hover:text-orange-600">Logout</a>

@@ -5,24 +5,32 @@ from django.contrib.auth.models import Permission
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import authenticate, views, login, update_session_auth_hash, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .forms import LoginForm, RegisterUserForm
+from .forms import LoginForm, RegisterUserForm, CustomUserChangeForm
 from django.views.generic import FormView
 from django.http import HttpResponse
-from .models import Book,Library, Librarian
+from .models import Book,Library, Librarian, UserProfile
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from rest_framework import generics
+from .serializers import LibrarySerializer
+
+# django rest framework 
+class libraryAPIview(generics.ListCreateAPIView):
+    queryset = Library.objects.all()
+    serializer_class = LibrarySerializer
 
 
 
 @login_required(login_url=reverse_lazy('login'))
 def home(request):
-    context = {'user': request.user}
+    profile = get_object_or_404(UserProfile, user=request.user) # the table in the db is empty
+    context = {'user': request.user, 'profile': profile}
     request.user.is_authenticated
     
     return render(request,"home.html",context)
@@ -41,6 +49,25 @@ class RegisterUser(FormView):
         # update_session_auth_hash(self.request, user) # Use if you need to invalidate other sessions
         return super().form_valid(form)
 
+class editUser(LoginRequiredMixin, FormView):
+    login_url = reverse_lazy('login')
+    
+    form_class= CustomUserChangeForm
+    template_name = 'registration/changeUser.html'
+    success_url = reverse_lazy('home')
+
+    # change the instanciation of the form to the current user
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance']= self.request.user
+
+        return kwargs
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request,user)
+
+        return super().form_valid(form)
+    
 class LoginClass(FormView):
     form_class=LoginForm
     template_name= 'registration/login.html'
@@ -96,6 +123,7 @@ def logout_user(request):
     return render(request, 'registration/logout.html')
 
 @login_required(login_url=reverse_lazy('login'))
+@permission_required('relationshipapp.can_view', raise_exception= True)
 def list_books(request):
     books = Book.objects.all()
     context = {
@@ -103,8 +131,10 @@ def list_books(request):
     }
     return render(request, "relationship_app/list_books.html", context)
 
-class Libraries_List(LoginRequiredMixin,ListView):
+
+class Libraries_List(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     login_url=reverse_lazy('login')
+    permission_required='relationshipapp.view_library'
 
     template_name = 'relationship_app/list_libraries.html'
     model= Library
@@ -113,8 +143,10 @@ class Libraries_List(LoginRequiredMixin,ListView):
         return Library.objects.select_related("librarian").all()
   
 
-class library_detail(LoginRequiredMixin,DetailView):
+
+class library_detail(LoginRequiredMixin,PermissionRequiredMixin, DetailView):
     login_url=reverse_lazy('login')
+    permission_required='relationshipapp.view_library'
 
     model= Library
     template_name = "relationship_app/library_detail.html"

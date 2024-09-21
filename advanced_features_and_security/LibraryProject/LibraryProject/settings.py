@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-qlp=wga_-n0uvvcdj@wl+m3u)m8oqlg()o5+o3bcfs!s9eq=l_'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+
 
 ALLOWED_HOSTS = []
 
@@ -32,16 +33,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'relationshipapp',
+    'customUsers',
+    'rest_framework',
     
 ]
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'customUsers.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,3 +133,33 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static_cdn'  # Using Pathlib
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Media files (Uploaded by users)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media_cdn'
+
+
+##aditional secutity enhancement
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+#ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+
+#SECURE_BROWSER_XSS_FILTER = True
+#X_FRAME_OPTIONS = 'DENY'
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
+
+#SECURE_SSL_REDIRECT = True
+#SECURE_HSTS_SECONDS = 31536000  # 1 year
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+
+## django rest framwrok
