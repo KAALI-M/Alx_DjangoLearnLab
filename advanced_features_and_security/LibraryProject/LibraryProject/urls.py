@@ -28,6 +28,7 @@ urlpatterns = [
     path('permission/',views.authentication,name="authentication"),
     path('relationshipapp/', include('relationshipapp.urls'), name="relationshipapp"),
     path('RestAPI/',include('RestAPI.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 
 ]
 
