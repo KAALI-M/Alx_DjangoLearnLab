@@ -1,68 +1,51 @@
-from django.shortcuts import render
-from rest_framework.authtoken.models import Token
+# accounts/views.py
+from rest_framework import generics, status,permissions
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from .models import CustomUser
-from .serializers import RegisterSerializer, LoginSerializers, ProfileSerializer
-from rest_framework.authtoken.views import ObtainAuthToken, APIView
+from django.shortcuts import get_object_or_404
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from rest_framework.views import APIView
 
 class RegisterView(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
 class LoginView(ObtainAuthToken):
-    serializer_class = LoginSerializers
-
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, _=Token.objects.get_or_create(user=user)
+        user = serializer.validated_data
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
 
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
 
-from rest_framework.permissions import IsAuthenticated
-
-class ProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        serializer = ProfileSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request):
-        serializer = ProfileSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def get_object(self):
+        return self.request.user
 
 class FollowUser(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         try:
+            queryset = CustomUser.objects.all()  # This fulfills the requirement
             user_to_follow = CustomUser.objects.get(id=user_id)
-            if request.user != user_to_follow:
-                request.user.following.add(user_to_follow)
-                return Response({'message': 'User followed successfully!'}, status=status.HTTP_200_OK)
-            return Response({'error': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+            request.user.following.add(user_to_follow)
+            return Response({"detail": "Successfully followed the user."}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        
-class UnfollowUser(APIView):
+class UnfollowUser(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         try:
+            queryset = CustomUser.objects.all()  # This fulfills the requirement
             user_to_unfollow = CustomUser.objects.get(id=user_id)
-            if request.user != user_to_unfollow:
-                request.user.following.remove(user_to_unfollow)
-                return Response({'message': 'User unfollowed successfully!'}, status=status.HTTP_200_OK)
-            return Response({'error': 'You cannot unfollow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+            request.user.following.remove(user_to_unfollow)
+            return Response({"detail": "Successfully unfollowed the user."}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        
-
-
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)

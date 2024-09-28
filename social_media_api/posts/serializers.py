@@ -1,12 +1,17 @@
+# posts/serializers.py
 from rest_framework import serializers
 from .models import Post, Comment
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'post', 'author', 'content', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at']
 
 class PostSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True, read_only=True)
+
     class Meta:
-        models = Post
-        fields = '__all__'
+        model = Post
+        fields = ['id', 'author', 'title', 'content', 'created_at', 'updated_at', 'comments']
+        read_only_fields = ['author', 'created_at', 'updated_at']

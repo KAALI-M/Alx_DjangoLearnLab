@@ -1,34 +1,38 @@
+# accounts/serializers.py
 from rest_framework import serializers
-from .models import CustomUser
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
+User = get_user_model()
+
 class UserSerializer(serializers.ModelSerializer):
-    followers_count = serializers.SerializerMethodField()
-
     class Meta:
-        model = CustomUser
-        fields = '__all__'
-
-    def get_followers_count(self, obj):
-        return obj.followers.count()
+        model = User
+        fields = ['id', 'username', 'bio', 'profile_picture']
 
 class RegisterSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(read_only=True)
     class Meta:
-        model = get_user_model()
-        fields = ['username', 'email', 'bio', 'profile_picture', 'token']
+        model = User
+        fields = ['username', 'password', 'bio', 'profile_picture']
+        extra_kwargs = {'password': {'write_only': True}}
 
-        def create(self, validated_data):
-            user = get_user_model().objects.create_user(**validated_data)
-            return user
-        
-class LoginSerializers(serializers.ModelSerializer):
+    def create(self, validated_data):
+        user = get_user_model().objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        user.bio = validated_data.get('bio', '')
+        user.profile_picture = validated_data.get('profile_picture', None)
+        user.save()
+        Token.objects.create(user=user)
+        return user
+
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'bio', 'profile_picture', 'followers']
-        read_only_fields = ['username', 'followers']  # Users cannot change these fields
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+        if user is None:
+            raise serializers.ValidationError('Invalid credentials')
+        return user

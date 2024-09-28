@@ -1,11 +1,19 @@
-from django.shortcuts import render
 from rest_framework import generics, permissions
+from rest_framework.response import Response
 from .models import Notification
-from .serializers import NotificationSerializer
 
-class NotificationListView(generics.ListAPIView):
-    serializer_class = NotificationSerializer
+class NotificationList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
+    
+    def get(self, request, *args, **kwargs):
+        notifications = Notification.objects.filter(recipient=request.user).order_by('-timestamp')
+        notification_data = [
+            {
+                'id': notification.id,
+                'actor': notification.actor.username,
+                'verb': notification.verb,
+                'timestamp': notification.timestamp,
+                'is_read': notification.is_read,
+            } for notification in notifications
+        ]
+        return Response(notification_data)
