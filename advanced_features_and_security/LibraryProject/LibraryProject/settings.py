@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'relationshipapp',
     'customUsers',
     'rest_framework',
-    
+    'RestAPI',
 ]
 AUTH_USER_MODEL = 'customUsers.User'
 

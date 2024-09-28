@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('permission/',views.authentication,name="authentication"),
     path('relationshipapp/', include('relationshipapp.urls'), name="relationshipapp"),
+    path('RestAPI/',include('RestAPI.urls')),
+
 ]
 
 if settings.DEBUG:
